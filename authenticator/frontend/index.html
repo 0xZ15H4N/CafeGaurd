@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CafeGuard Login</title>
+  <script type="module">
+    import { BrowserMultiFormatReader } from "https://cdn.jsdelivr.net/npm/@zxing/library@latest/+esm";
+
+    let codeReader = new BrowserMultiFormatReader();
+
+    window.startScanner = async () => {
+      const videoElement = document.getElementById('reader');
+      const resultText = document.getElementById('result');
+
+      try {
+        // Ask for back camera (environment)
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const videoInputDevices = devices.filter(d => d.kind === 'videoinput');
+        const backCamera = videoInputDevices.find(device => device.label.toLowerCase().includes('back')) || videoInputDevices[0];
+
+        const selectedDeviceId = backCamera.deviceId;
+
+        codeReader.decodeFromVideoDevice(
+          selectedDeviceId,
+          'reader',
+          (result, err, controls) => {
+            if (result) {
+              resultText.textContent = 'Scanned QR Code: ' + result.getText();
+              controls.stop();
+              videoElement.srcObject = null;
+              videoElement.style.display = 'none';
+            }
+          }
+        );
+
+        videoElement.style.display = 'block';
+      } catch (err) {
+        alert('Camera error: ' + err.message);
+      }
+    };
+  </script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 2rem;
+      background: #f8f8f8;
+    }
+
+    #logo {
+      width: 100px;
+      margin: 0 auto 20px;
+    }
+
+    #reader {
+      margin: 20px auto;
+      width: 100%;
+      max-width: 400px;
+      height: auto;
+      display: none;
+      border: 2px solid #333;
+    }
+
+    button {
+      padding: 1rem 2rem;
+      font-size: 1rem;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+  <img src="logo.png" alt="CafeGuard Logo" id="logo" />
+  <h1>Welcome to CafeGuard</h1>
+
+  <button onclick="startScanner()">Tap to Scan</button>
+
+  <video id="reader"></video>
+
+  <div id="result"></div>
+</body>
+</html>
