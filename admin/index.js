@@ -54,8 +54,9 @@ window.startScanner = async function () {
       "reader",
       async (result, err, controls) => {
         if (result) {
-          const encryptedText = result.getText();
-          resultText.textContent = "Scanned QR Code: " + encryptedText;
+          const encryptedText = JSON.parse(result.getText());
+          
+          resultText.textContent = "Scanned QR Code: " encryptedText;
 
           try {
             const plainText = await decrypt(encryptedText, password);

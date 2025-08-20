@@ -45,14 +45,18 @@ const getQrCode = asyncHandler(async (req, res) => {
     const ip = (req.socket.remoteAddress || "")
         .replace("::ffff:", "")
         .replace("::1", "127.0.0.1");
-
+    console.log("the ip recieves is ",ip);
     const now = new Date();
-    const formatted = `(${String(now.getHours() + 1).padStart(2, '0')}-${String(now.getMinutes()).padStart(2, '0')}-${String(now.getSeconds()).padStart(2, '0')})`;
-    const data = `${formatted}-${ip}`;
-    const password = process.env.SECRET_TOKEN || "mySecretPassword123";
+    let formatted =JSON.parse(`{"time":"${String(now.getHours() + 1).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}:${String(now.getSeconds()).padStart(2, '0')}"}`);
+    formatted.ip = `${ip}`;
+  console.log("the time limit granted : ", formatted.time, "ip address is ", formatted.ip);
+    formatted = JSON.stringify(formatted);
+console.log(formatted)
+
+const password = process.env.SECRET_TOKEN || "mySecretPassword123";
 
     try {
-        const encrypted = encrypt(data, password);
+        const encrypted = encrypt(formatted, password);
         await generateQRCode(encrypted, ip);
         return res.redirect("/show-QrCode");
     } catch (err) {
@@ -61,6 +65,11 @@ const getQrCode = asyncHandler(async (req, res) => {
     }
 });
 
+const redirectRequest = asyncHandler(async (req, res) => {
+       return res.redirect("/qrcode");
+});
+
+
 export {
-    getQrCode
-};
+    getQrCode,
+  redirectRequest };

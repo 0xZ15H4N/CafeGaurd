@@ -1,3 +1,5 @@
+
+
 import express from "express"
 import cors from "cors"
 import singleRoutes from "./routes/singleRoutes.routes.js"
@@ -14,23 +16,24 @@ const app = express();
 app.use(cors());
 app.use(express.json({limit:"16kb"}));
 app.use(express.urlencoded({extended:true,limit:"16kb"}));
-// app.use(express.static("/public"));
+app.use(express.static("./public"));
 
-app.use(express.static(path.join(__dirname, "public"))); // This serves 127001.png
+// app.use(express.static(path.join(__dirname, "public"))); // This serves 127001.png
 
-app.use("/get",singleRoutes)
+app.use("/",singleRoutes)
 
-app.get("/",(req,res)=>{
-    res.send(`<h1>hello world</h1><br><p>${(req.socket.remoteAddress).replace("::ffff:","")}`);
-})
+// app.get("/",(req,res)=>{
+//    res.send(`<h1>hello world</h1><br><p>${(req.socket.remoteAddress).replace("::ffff:","")}`);
+    
+//})
 app.get('/show-QrCode', (req, res) => {
     const ip = (req.socket.remoteAddress || "")
         .replace("::ffff:", "")
         .replace("::1", "127.0.0.1");
-
+    console.log("ip_address recieved : ",ip)
     const filename = `${ip.replaceAll(".", "")}.png`;
     const filePath = path.resolve("public", filename);
-    console.log(filePath)
+    console.log("file created @ ", filePath)
     if (fs.existsSync(filePath)) {
         res.send(`
         <html>
