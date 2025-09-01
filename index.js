@@ -15,7 +15,7 @@ app.use(cors());
 app.use(express.json({limit:"16kb"}));
 app.use(express.urlencoded({extended:true,limit:"16kb"}));
 app.use(express.static("./dist"));
-
+app.use('/public', express.static('./public')); // cause i have multiple static serving If i dont define this it will look for the png in all the static folder chronologically and that would increase the time of access!
 
 app.use("/",singleRoutes)
 
