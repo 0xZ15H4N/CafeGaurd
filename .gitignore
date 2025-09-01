@@ -1,3 +1,6 @@
 authenticator/frontend/node_modules
 assets/certs/*.pem
 public/*
+dist/*
+*.pdf
+*.png

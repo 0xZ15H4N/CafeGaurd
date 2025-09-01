@@ -1,5 +1,3 @@
-
-
 import express from "express"
 import cors from "cors"
 import singleRoutes from "./routes/singleRoutes.routes.js"
@@ -13,19 +11,14 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 console.log(__dirname,__filename)
 const app = express();
-app.use(cors());
+app.use(cors());  
 app.use(express.json({limit:"16kb"}));
 app.use(express.urlencoded({extended:true,limit:"16kb"}));
-app.use(express.static("./public"));
+app.use(express.static("./dist"));
 
-// app.use(express.static(path.join(__dirname, "public"))); // This serves 127001.png
 
 app.use("/",singleRoutes)
 
-// app.get("/",(req,res)=>{
-//    res.send(`<h1>hello world</h1><br><p>${(req.socket.remoteAddress).replace("::ffff:","")}`);
-    
-//})
 app.get('/show-QrCode', (req, res) => {
     const ip = (req.socket.remoteAddress || "")
         .replace("::ffff:", "")
@@ -44,7 +37,6 @@ app.get('/show-QrCode', (req, res) => {
           </div>
         </body>
       </html>
-      
         `);
     } else {
         res.status(404).send("QR Code not found");

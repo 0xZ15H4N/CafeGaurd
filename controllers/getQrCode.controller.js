@@ -40,6 +40,10 @@ async function generateQRCode(encryptedText, ip) {
     console.log(`✅ QR Code generated at: ${outputPath}`);
 }
 
+// https://192.168.1.10/ server 
+
+// 
+
 // --- Main Controller ---
 const getQrCode = asyncHandler(async (req, res) => {
     const ip = (req.socket.remoteAddress || "")
@@ -53,8 +57,8 @@ const getQrCode = asyncHandler(async (req, res) => {
     formatted = JSON.stringify(formatted);
 console.log(formatted)
 
-const password = process.env.SECRET_TOKEN || "mySecretPassword123";
-
+const password = process.env.SECRET_TOKEN || "mySecretPassword123"; // defualt password
+ 
     try {
         const encrypted = encrypt(formatted, password);
         await generateQRCode(encrypted, ip);
