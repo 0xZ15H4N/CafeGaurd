@@ -17,7 +17,7 @@ app.use(express.urlencoded({extended:true,limit:"16kb"}));
 app.use(express.static("./dist"));
 app.use('/public', express.static('./public')); // cause i have multiple static serving If i dont define this it will look for the png in all the static folder chronologically and that would increase the time of access!
 
-app.use("/",singleRoutes)
+app.use("/client",singleRoutes)
 
 app.get('/show-QrCode', (req, res) => {
     const ip = (req.socket.remoteAddress || "")
@@ -42,6 +42,7 @@ app.get('/show-QrCode', (req, res) => {
         res.status(404).send("QR Code not found");
     }
 });
+
 app.listen(4443,()=>{
     console.log("listening on http://localhost:4443/");
 })

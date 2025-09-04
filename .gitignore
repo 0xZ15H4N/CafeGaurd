@@ -1,4 +1,4 @@
-authenticator/frontend/node_modules
+./node_modules
 assets/certs/*.pem
 public/*
 dist/*

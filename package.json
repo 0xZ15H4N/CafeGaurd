@@ -20,10 +20,12 @@
   },
   "homepage": "https://github.com/0xZ15H4N/CafeGaurd#readme",
   "dependencies": {
+    "axios": "^1.11.0",
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
+    "fast-two-sms": "^3.0.0",
     "qrcode": "^1.5.4"
   }
 }

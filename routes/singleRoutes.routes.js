@@ -1,6 +1,8 @@
 import {Router} from "express";
-import { getQrCode, redirectRequest } from "../controllers/getQrCode.controller.js";
+import { genOTP, verifyOTP } from "../controllers/client.controller.js";
 const router = Router();
-//router.route("/").get(redirectRequestctRequest)
-router.route("/qrcode").post(getQrCode)
+
+router.route("/generate-otp").post(genOTP)
+router.route("/verify-otp").post(verifyOTP)
+
 export default router
