@@ -1,6 +1,7 @@
 import express from "express"
 import cors from "cors"
-import singleRoutes from "./routes/singleRoutes.routes.js"
+import singleClientRoutes from "./routes/client.routes.js"
+// import singleAdminRoutes from "./routes/admin.routes.js"
 import path from "path";
 import fs from "fs"
 
@@ -17,7 +18,8 @@ app.use(express.urlencoded({extended:true,limit:"16kb"}));
 app.use(express.static("./dist"));
 app.use('/public', express.static('./public')); // cause i have multiple static serving If i dont define this it will look for the png in all the static folder chronologically and that would increase the time of access!
 
-app.use("/client",singleRoutes)
+app.use("/client",singleClientRoutes)
+// app.use("/admin",singleAdminRoutes)
 
 app.get('/show-QrCode', (req, res) => {
     const ip = (req.socket.remoteAddress || "")
@@ -28,16 +30,26 @@ app.get('/show-QrCode', (req, res) => {
     const filePath = path.resolve("public", filename);
     console.log("file created @ ", filePath)
     if (fs.existsSync(filePath)) {
-        res.send(`
-        <html>
-        <body style="margin: 0; padding: 0; background: #f2f2f2; font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh;">
-          <div style="text-align: center; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
-            <h2 style="color: #333; margin-bottom: 20px;">Scan Your QR</h2>
-            <img src="${filename}" alt="QR Code" style="width: 500px; height: 500px;" />
-          </div>
-        </body>
+      res.send(`
+      <html>
+      <body style="margin: 0; padding: 0; background: #f2f2f2; font-family: Arial, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh;">
+        <div style="text-align: center; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);">
+          <h2 style="color: #333; margin-bottom: 20px;">Scan Your QR</h2>
+          <img src="./public/${filename}" alt="QR Code" style="width: 500px; height: 500px;" />
+          <p id="wifi-msg">Free One Device that you can Use on this wifi </p>
+          <script>
+              const secretToken = localStorage.getItem("secretToken");
+              if (secretToken) {
+                    const pTag = document.getElementById("wifi-msg");
+                    pTag.innerText += " (Secret Token: " + secretToken + ")";
+                }
+            </script>
+
+        </div>
+      </body>
       </html>
-        `);
+    `);
+    
     } else {
         res.status(404).send("QR Code not found");
     }
